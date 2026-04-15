@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Offre;
+use App\Models\Competence;
+use App\Models\Profil;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,9 +20,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        User::factory(2)->admin()->create();
+
+        User::factory(5)->recruteur()->create()->each(function ($user){
+            Offre::factory(rand(2,3))->create(['user_id' => $user->id]);
+        });
+
+        $competences = Competence::factory(10)->create();
+
+        User::factory(10)->create()->each(function ($user) use ($competences){
+            $profil = Profil::factory()->create(['user_id' => $user->id]);
+            $profil->Competences()->attach(
+                $competences->random(3)->pluck('id'),
+                ['niveau' => fake()->randomElement(['débutant', 'intermédiaire', 'expert'])]
+            );
+        });
     }
 }
