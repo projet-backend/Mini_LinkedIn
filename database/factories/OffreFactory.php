@@ -24,6 +24,7 @@ class OffreFactory extends Factory
             'description' => fake()->paragraph(),
             'localisation' => fake()->city(),
             'type' => fake()->randomElement(['CDI','CDD','stage']),
+            'actif' => fake()->boolean(),
         ];
     }
 }

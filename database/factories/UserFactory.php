@@ -57,4 +57,11 @@ class UserFactory extends Factory
             'role' => 'recruteur',
         ]);
     }
+
+    public function candidat(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'role' => 'candidat',
+        ]);
+    }
 }

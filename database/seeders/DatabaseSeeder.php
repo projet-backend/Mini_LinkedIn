@@ -18,12 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+    
 
         User::factory(2)->admin()->create();
 
@@ -33,12 +28,14 @@ class DatabaseSeeder extends Seeder
 
         $competences = Competence::factory(10)->create();
 
-        User::factory(10)->create()->each(function ($user) use ($competences){
+        User::factory(10)->candidat()->create()->each(function ($user) use ($competences){
             $profil = Profil::factory()->create(['user_id' => $user->id]);
-            $profil->Competences()->attach(
-                $competences->random(3)->pluck('id'),
-                ['niveau' => fake()->randomElement(['débutant', 'intermédiaire', 'expert'])]
-            );
+            $selected = $competences->random(3);
+            $attachData = $selected->mapWithKeys(function($competence){
+                return [$competence->id => ['niveau' => fake()->randomElement(['débutant', 'intermédiaire', 'expert'])]];
+            })->toArray();
+                
+            $profil->Competences()->attach($attachData);
         });
     }
 }
