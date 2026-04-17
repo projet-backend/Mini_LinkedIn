@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profil_competence', function (Blueprint $table) {
+        Schema::create('competence_profil', function (Blueprint $table) {
             $table->foreignId('profil_id')->constrained('profils')->onDelete('cascade');
             $table->foreignId('competence_id')->constrained('competences')->onDelete('cascade');
             $table->enum('niveau', ['débutant', 'intermédiaire', 'expert']);
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profil_competence');
+        Schema::dropIfExists('competence_profil');
     }
 };
