@@ -13,13 +13,13 @@ class Candidature extends Model
         'statut',
     ];
 
-    public function offres()
+    public function offre()
     {
-        return $this->belongsToMany(Offre::class);
+        return $this->belongsTo(Offre::class);
     }
 
-    public function profils()
+    public function profil()
     {
-        return $this->belongsToMany(Profil::class);
+        return $this->belongsTo(Profil::class);
     }
 }

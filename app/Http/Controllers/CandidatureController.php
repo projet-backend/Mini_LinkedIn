@@ -7,6 +7,8 @@ use App\Models\Candidature;
 use App\Models\Offre;
 use App\Models\Profil;
 use Illuminate\Support\Facades\Auth;
+use App\Events\CandidatureDeposee;
+use App\Events\StatutCandidatureMis;
 
 class CandidatureController extends Controller
 {
@@ -40,6 +42,8 @@ class CandidatureController extends Controller
             'message'   => $request->message,
             'statut'    => 'en_attente',
         ]);
+
+        CandidatureDeposee::dispatch($candidature);
 
         return response()->json($candidature, 201);
     }
@@ -92,8 +96,10 @@ class CandidatureController extends Controller
         $request->validate([
             'statut' => 'required|in:en_attente,acceptee,refusee'
         ]);
-
+        $ancienStatut = $candidature->statut;
         $candidature->update(['statut' => $request->statut]);
+
+        StatutCandidatureMis::dispatch($candidature, $ancienStatut, $request->statut);
 
         return response()->json($candidature);
     }
