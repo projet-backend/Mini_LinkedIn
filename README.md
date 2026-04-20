@@ -1,49 +1,51 @@
-# 🔗 Mini LinkedIn — Backend API
+# 🔗 Mini LinkedIn — API Backend
 
-> RESTful API for a recruitment platform built with **Laravel**, featuring JWT 
-> authentication, role-based middleware, Eloquent ORM, and an Events & Listeners system.
+> API RESTful d'une plateforme de recrutement construite avec **Laravel**, 
+> intégrant l'authentification JWT, une autorisation par rôles, 
+> l'ORM Eloquent et un système d'Events & Listeners.
 
 ---
 
-## 📋 Table of Contents
+##  Table des matières
 
-- [Context](#context)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
+- [Contexte](#contexte)
+- [Technologies utilisées](#technologies-utilisées)
+- [Prérequis](#prérequis)
 - [Installation](#installation)
-- [Database Seeding](#database-seeding)
-- [API Routes](#api-routes)
-- [Authorization Rules](#authorization-rules)
+- [Données de test](#données-de-test)
+- [Routes de l'API](#routes-de-lapi)
+- [Règles d'autorisation](#règles-dautorisation)
 - [Events & Listeners](#events--listeners)
-- [Postman Collection](#postman-collection)
-- [Project Structure](#project-structure)
+- [Collection Postman](#collection-postman)
+- [Structure du projet](#structure-du-projet)
+- [Auteurs](#auteurs)
 
 ---
 
-## Context
+## Contexte
 
-Backend API of a Mini LinkedIn recruitment platform connecting **candidates** 
-and **recruiters**, supervised by an **administrator**.
+API backend d'une plateforme de recrutement Mini LinkedIn mettant en relation 
+des **candidats** et des **recruteurs**, supervisée par un **administrateur**.
 
-- A **candidat** creates a profile, adds skills, and applies to job offers.
-- A **recruteur** posts offers and manages received applications.
-- An **admin** supervises all users and offers across the platform.
+- Un **candidat** crée son profil, ajoute ses compétences et postule à des offres.
+- Un **recruteur** publie des offres et gère les candidatures reçues.
+- Un **admin** supervise l'ensemble des utilisateurs et des offres.
 
 ---
 
-## Tech Stack
+## Technologies utilisées
 
-| Layer           | Technology              |
+| Couche          | Technologie             |
 |-----------------|-------------------------|
-| Language        | PHP 8.x                 |
+| Langage         | PHP 8.x                 |
 | Framework       | Laravel 10.x            |
-| Authentication  | JWT (`tymon/jwt-auth`)  |
-| Database        | MySQL                   |
-| Testing         | Postman                 |
+| Authentification| JWT (`tymon/jwt-auth`)  |
+| Base de données | MySQL                   |
+| Tests           | Postman                 |
 
 ---
 
-## Prerequisites
+## Prérequis
 
 - PHP >= 8.1
 - Composer
@@ -55,148 +57,146 @@ and **recruiters**, supervised by an **administrator**.
 ## Installation
 
 ```bash
-# 1. Clone the repository
+# 1. Cloner le dépôt
 git clone https://github.com/projet-backend/Mini_LinkedIn.git
 cd Mini_LinkedIn
 
-# 2. Install dependencies
+# 2. Installer les dépendances
 composer install
 
-# 3. Configure environment
+# 3. Configurer l'environnement
 cp .env.example .env
-# Edit DB_DATABASE, DB_USERNAME, DB_PASSWORD in .env
+# Modifier DB_DATABASE, DB_USERNAME, DB_PASSWORD dans le fichier .env
 
-# 4. Generate application key
+# 4. Générer la clé de l'application
 php artisan key:generate
 
-# 5. Generate JWT secret
+# 5. Générer le secret JWT
 php artisan jwt:secret
 
-# 6. Run migrations and seed
+# 6. Exécuter les migrations et les seeders
 php artisan migrate --seed
 
-# 7. Start the server
+# 7. Démarrer le serveur
 php artisan serve
 ```
 
-API base URL: `http://127.0.0.1:8000/api`
+URL de base de l'API : `http://127.0.0.1:8000/api`
 
 ---
 
-## Database Seeding
+## Données de test
 
-| Role      | Count | Details                         |
-|-----------|-------|---------------------------------|
-| Admin     | 2     | Full platform access            |
-| Recruteur | 5     | 2–3 active job offers each      |
-| Candidat  | 10    | Each with a profile and skills  |
-
----
-
-## API Routes
-
-###  Public
-
-| Method | Endpoint        | Description           |
-|--------|-----------------|-----------------------|
-| POST   | `/api/register` | Register a new user   |
-| POST   | `/api/login`    | Login — receive JWT   |
+| Rôle      | Nombre | Détails                              |
+|-----------|--------|--------------------------------------|
+| Admin     | 2      | Accès complet à la plateforme        |
+| Recruteur | 5      | 2 à 3 offres d'emploi chacun         |
+| Candidat  | 10     | Chacun avec un profil et compétences |
 
 ---
 
-###  Protected (all roles — `auth:api`)
+## Routes de l'API
 
-| Method | Endpoint    | Description         |
-|--------|-------------|---------------------|
-| POST   | `/api/logout` | Invalidate token  |
+###  Publiques
 
----
-
-###  Candidat only (`role:candidat`)
-
-| Method | Endpoint                                  | Description                     |
-|--------|-------------------------------------------|---------------------------------|
-| POST   | `/api/profil`                             | Create profile (once only)      |
-| GET    | `/api/profil`                             | View own profile                |
-| PUT    | `/api/profil`                             | Update own profile              |
-| POST   | `/api/profil/competences`                 | Add a skill with level          |
-| DELETE | `/api/profil/competences/{competence}`    | Remove a skill                  |
-| POST   | `/api/offres/{offre}/candidater`          | Apply to a job offer            |
-| GET    | `/api/mes-candidatures`                   | View own applications           |
+| Méthode | Endpoint        | Description              |
+|---------|-----------------|--------------------------|
+| POST    | `/api/register` | Créer un compte          |
+| POST    | `/api/login`    | Se connecter — token JWT |
 
 ---
 
-###  Job Offers — all authenticated users
+###  Protégées (tous les rôles — `auth:api`)
 
-| Method | Endpoint              | Description                              |
-|--------|-----------------------|------------------------------------------|
-| GET    | `/api/offres`         | List active offers (paginated, filtered) |
-| GET    | `/api/offres/{offre}` | View offer details                       |
-
-> Supports query filters: `?localisation=Casablanca&type=CDI`  
-> Paginated: 10 results/page — sorted by `created_at` descending.
+| Méthode | Endpoint      | Description             |
+|---------|---------------|-------------------------|
+| POST    | `/api/logout` | Invalider le token JWT  |
 
 ---
 
-###  Recruteur only (`role:recruteur`)
+###  Candidat uniquement (`role:candidat`)
 
-| Method | Endpoint                                   | Description                       |
-|--------|--------------------------------------------|-----------------------------------|
-| POST   | `/api/offres`                              | Create a new offer                |
-| PUT    | `/api/offres/{offre}`                      | Update own offer                  |
-| DELETE | `/api/offres/{offre}`                      | Delete own offer                  |
-| GET    | `/api/offres/{offre}/candidatures`         | View applications for own offer   |
-| PATCH  | `/api/candidatures/{candidature}/statut`   | Change application status         |
-
----
-
-###  Admin only (`role:admin` — prefix `/admin`)
-
-| Method | Endpoint                        | Description                   |
-|--------|---------------------------------|-------------------------------|
-| GET    | `/api/admin/users`              | List all platform users       |
-| DELETE | `/api/admin/users/{user}`       | Delete a user account         |
-| PATCH  | `/api/admin/offres/{offre}`     | Toggle offer active status    |
+| Méthode | Endpoint                                  | Description                        |
+|---------|-------------------------------------------|------------------------------------|
+| POST    | `/api/profil`                             | Créer son profil (une seule fois)  |
+| GET     | `/api/profil`                             | Consulter son propre profil        |
+| PUT     | `/api/profil`                             | Modifier son profil                |
+| POST    | `/api/profil/competences`                 | Ajouter une compétence avec niveau |
+| DELETE  | `/api/profil/competences/{competence}`    | Retirer une compétence             |
+| POST    | `/api/offres/{offre}/candidater`          | Postuler à une offre               |
+| GET     | `/api/mes-candidatures`                   | Consulter ses candidatures         |
 
 ---
 
-## Authorization Rules
+###  Offres d'emploi — tous les utilisateurs authentifiés
 
-- All routes except `/register` and `/login` require a valid JWT → `401` if missing
-- Role violations return `403 Forbidden`
-- A recruteur can only modify or delete **their own** offers
-- A candidat can only view **their own** applications
-- Role enforcement is handled via a custom `role` middleware
+| Méthode | Endpoint              | Description                                  |
+|---------|-----------------------|----------------------------------------------|
+| GET     | `/api/offres`         | Liste des offres actives (paginée, filtrée)  |
+| GET     | `/api/offres/{offre}` | Détail d'une offre                           |
+
+> Filtres disponibles : `?localisation=Casablanca&type=CDI`  
+> Pagination : 10 résultats par page — triés par `created_at` décroissant.
+
+---
+
+###  Recruteur uniquement (`role:recruteur`)
+
+| Méthode | Endpoint                                   | Description                          |
+|---------|--------------------------------------------|--------------------------------------|
+| POST    | `/api/offres`                              | Créer une offre                      |
+| PUT     | `/api/offres/{offre}`                      | Modifier son offre                   |
+| DELETE  | `/api/offres/{offre}`                      | Supprimer son offre                  |
+| GET     | `/api/offres/{offre}/candidatures`         | Voir les candidatures reçues         |
+| PATCH   | `/api/candidatures/{candidature}/statut`   | Changer le statut d'une candidature  |
+
+---
+
+###  Admin uniquement (`role:admin` — préfixe `/admin`)
+
+| Méthode | Endpoint                        | Description                      |
+|---------|---------------------------------|----------------------------------|
+| GET     | `/api/admin/users`              | Liste de tous les utilisateurs   |
+| DELETE  | `/api/admin/users/{user}`       | Supprimer un compte utilisateur  |
+| PATCH   | `/api/admin/offres/{offre}`     | Activer / désactiver une offre   |
+
+---
+
+## Règles d'autorisation
+
+- Toutes les routes sauf `/register` et `/login` nécessitent un JWT valide → `401` sinon
+- Toute violation de rôle retourne `403 Forbidden`
+- Un recruteur ne peut modifier ou supprimer que **ses propres** offres
+- Un candidat ne peut consulter que **ses propres** candidatures
+- L'autorisation par rôle est gérée via le middleware personnalisé `RoleMiddleware`
 
 ---
 
 ## Events & Listeners
 
-Laravel's Event/Listener system is used to decouple application logic from controllers.
+Le système d'Events & Listeners de Laravel est utilisé pour découpler 
+la logique métier des contrôleurs.
 
-| Event                  | Triggered When                        | Listener                     | Output                                              |
-|------------------------|---------------------------------------|------------------------------|-----------------------------------------------------|
-| `CandidatureDeposee`   | Candidat applies to an offer          | `LogCandidatureDeposee`      | Logs date, candidate name, offer title              |
-| `StatutCandidatureMis` | Recruteur changes application status  | `LogStatutCandidatureMis`    | Logs old status, new status, and timestamp          |
+| Événement              | Déclenché quand                            | Listener                  | Action                                                        |
+|------------------------|--------------------------------------------|---------------------------|---------------------------------------------------------------|
+| `CandidatureDeposee`   | Un candidat postule à une offre            | `LogCandidatureDeposee`   | Enregistre la date, le nom du candidat et le titre de l'offre |
+| `StatutCandidatureMis` | Un recruteur change le statut              | `LogStatutCandidatureMis` | Enregistre l'ancien statut, le nouveau statut et la date      |
 
-Log file: `storage/logs/candidatures.log`
-
-The `CandidatureDeposee` event receives the full `Candidature` model instance 
-via its constructor, making all related data accessible to the listener.
+Fichier de log : `storage/logs/candidatures.log`
 
 ---
 
-## Postman Collection
+## Collection Postman
 
-Available in `/postman/mini_linkedin.json`.
+Disponible dans `/postman/mini_linkedin.json`.
 
-Covers: registration, login (all roles), profile CRUD, offer CRUD, 
-apply to offer, view applications, change status, admin actions,  
-and error cases: `401`, `403`, `422`.
+Couvre : inscription, connexion (tous les rôles), CRUD profil, CRUD offres,
+candidature, changement de statut, actions admin,
+et les cas d'erreur : `401`, `403`, `422`.
 
 ---
 
-## Project Structure
+## Structure du projet
 
 ```
 app/
@@ -248,12 +248,12 @@ postman/
 
 ---
 
-## Authors
+## Auteurs
 
-Developed by:
-- **EL Hamoudi Wiam**
+Projet réalisé par :
+- **El Hamoudi Wiam**
 - **Biby Maryam**
-- **ELMaaroufi Soukaina**
+- **El Maaroufi Soukaina**
 
-ENSAM Casablanca — Département Génie Informatique et IA
-Supervised by: **WARDI Ahmed**
+ENSAM Casablanca — Département Génie Informatique et IA  
+Encadré par : **WARDI Ahmed**
