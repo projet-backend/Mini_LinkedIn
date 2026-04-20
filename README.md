@@ -251,9 +251,9 @@ postman/
 ## Auteurs
 
 Projet réalisé par :
-- **El Hamoudi Wiam**
+- **EL Hamoudi Wiam**
 - **Biby Maryam**
-- **El Maaroufi Soukaina**
+- **ELMaaroufi Soukaina**
 
 ENSAM Casablanca — Département Génie Informatique et IA  
 Encadré par : **WARDI Ahmed**
