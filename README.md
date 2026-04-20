@@ -95,7 +95,7 @@ API base URL: `http://127.0.0.1:8000/api`
 
 ## API Routes
 
-### 🔓 Public
+###  Public
 
 | Method | Endpoint        | Description           |
 |--------|-----------------|-----------------------|
@@ -104,7 +104,7 @@ API base URL: `http://127.0.0.1:8000/api`
 
 ---
 
-### 🔐 Protected (all roles — `auth:api`)
+###  Protected (all roles — `auth:api`)
 
 | Method | Endpoint    | Description         |
 |--------|-------------|---------------------|
@@ -112,7 +112,7 @@ API base URL: `http://127.0.0.1:8000/api`
 
 ---
 
-### 👤 Candidat only (`role:candidat`)
+###  Candidat only (`role:candidat`)
 
 | Method | Endpoint                                  | Description                     |
 |--------|-------------------------------------------|---------------------------------|
@@ -126,7 +126,7 @@ API base URL: `http://127.0.0.1:8000/api`
 
 ---
 
-### 💼 Job Offers — all authenticated users
+###  Job Offers — all authenticated users
 
 | Method | Endpoint              | Description                              |
 |--------|-----------------------|------------------------------------------|
@@ -138,7 +138,7 @@ API base URL: `http://127.0.0.1:8000/api`
 
 ---
 
-### 🏢 Recruteur only (`role:recruteur`)
+###  Recruteur only (`role:recruteur`)
 
 | Method | Endpoint                                   | Description                       |
 |--------|--------------------------------------------|-----------------------------------|
@@ -150,7 +150,7 @@ API base URL: `http://127.0.0.1:8000/api`
 
 ---
 
-### 🛠️ Admin only (`role:admin` — prefix `/admin`)
+###  Admin only (`role:admin` — prefix `/admin`)
 
 | Method | Endpoint                        | Description                   |
 |--------|---------------------------------|-------------------------------|
@@ -251,9 +251,9 @@ postman/
 ## Authors
 
 Developed by:
-- **El Hamoudi Wiam**
+- **EL Hamoudi Wiam**
 - **Biby Maryam**
-- **El Maaroufi Soukaina**
+- **ELMaaroufi Soukaina**
 
 ENSAM Casablanca — Département Génie Informatique et IA
 Supervised by: **WARDI Ahmed**
